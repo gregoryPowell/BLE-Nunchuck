@@ -5,7 +5,7 @@
 // NOTE: I am just learning how BLE works and am unsure if I am properly using the UUID system for my Services and Characteristics
 
 // UUID generated here: https://www.uuidgenerator.net/
-BLEService NunchuckService("e4257d92-0c9f-4fbc-bcf2-a8361bffcfb3");
+BLEService NunchukService("e4257d92-0c9f-4fbc-bcf2-a8361bffcfb3");
 
 // UUID for push button = 0x04CC
 BLEByteCharacteristic ButtonZ("04CC", BLENotify);  // Z button
@@ -35,21 +35,21 @@ void setup() {
       ;
   }
 
-  BLE.setLocalName("Nunchuck");               // set the local name peripheral advertises
-  BLE.setAdvertisedService(NunchuckService);  // set the UUID for the peripheral advertises
+  BLE.setLocalName("Nunchuk");               // set the local name peripheral advertises
+  BLE.setAdvertisedService(NunchukService);  // set the UUID for the peripheral advertises
 
   // add the characteristics to the service
-  NunchuckService.addCharacteristic(ButtonZ);
-  NunchuckService.addCharacteristic(ButtonC);
-  NunchuckService.addCharacteristic(JoystickX);
-  NunchuckService.addCharacteristic(JoystickY);
-  NunchuckService.addCharacteristic(AccX);
-  NunchuckService.addCharacteristic(AccY);
-  NunchuckService.addCharacteristic(AccZ);
-  NunchuckService.addCharacteristic(Pitch);
-  NunchuckService.addCharacteristic(Roll);
+  NunchukService.addCharacteristic(ButtonZ);
+  NunchukService.addCharacteristic(ButtonC);
+  NunchukService.addCharacteristic(JoystickX);
+  NunchukService.addCharacteristic(JoystickY);
+  NunchukService.addCharacteristic(AccX);
+  NunchukService.addCharacteristic(AccY);
+  NunchukService.addCharacteristic(AccZ);
+  NunchukService.addCharacteristic(Pitch);
+  NunchukService.addCharacteristic(Roll);
 
-  BLE.addService(NunchuckService);  //Add Service
+  BLE.addService(NunchukService);  //Add Service
 
   BLE.advertise();
   Serial.println("Bluetooth® device active, waiting for connections...");
