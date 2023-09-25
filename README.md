@@ -2,8 +2,8 @@
 This project turns a Wii/Wii-U Nunchuk remote into a simple BLE periphieral with the use of the Arduino Nano ESP32.
 
 ## Required Materials
-- Nintendo Nunchuk (https://www.nintendo.com/store/products/nunchuk-black-77944/ @embed)
-- Arduino Nano ESP32 (https://store.arduino.cc/products/nano-esp32 @embed)
+- Nintendo Nunchuk (https://www.nintendo.com/store/products/nunchuk-black-77944/ "@embed")
+- Arduino Nano ESP32 (https://store.arduino.cc/products/nano-esp32 "@embed")
 
 ## Setup
  This project uses the Arduino header file [Nunchuk.h] (https://github.com/infusion/Fritzing/blob/master/Nunchuk/Nunchuk.h) by Fritzing.  For a better undersantding on what Fritzing is doing I encourage you to look into the documentation compiled by Wii Brew [here] (http://wiibrew.org/wiki/Wiimote/Extension_Controllers/Nunchuck).  Fritzing, also, compiled a wonderful usage guide for his header file [here] (https://www.xarg.org/2016/12/using-a-wii-nunchuk-with-arduino/) which I will do my best to summarize here.
