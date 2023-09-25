@@ -10,15 +10,15 @@ This project turns a Wii/Wii-U Nunchuk remote into a simple BLE periphieral with
 
  NOTE: Different manufactureres of the Nunchuk use different wiring colors for the 4 relevant connections.  Due to this, it is important to base wiring off of connections to the propietary male connector instead of wire color.  I note this becuase googled guides to the wiring guides can be missleading.
 
- 1. Remove the male connector and note how the wires are connected to the pin out comparing to the below picture <attach-image-here>
- 1. The only wires that matter are connected to pins 1, 3, 4, 6.
-    1. Pin 1 = SDA
-    1. Pin 3 = 3.3 v
-    1. Pin 4 = GND
-    1. Pin 6 = SCL
- 1. Using the pinout of the Arduino Nano ESP32 [here] (https://docs.arduino.cc/hardware/nano-esp32) there is no explicit pins labeled for i2c SDA & SCl pins.  However, the [datasheet] (https://docs.arduino.cc/resources/datasheets/ABX00083-datasheet.pdf) says they can be found as follows:
-    1. SDA = A4
-    1. SCL = A5
+ [1]. Remove the male connector and note how the wires are connected to the pin out comparing to the below picture <attach-image-here>
+ [2]. The only wires that matter are connected to pins 1, 3, 4, 6.
+    [1]. Pin 1 = SDA
+    [2]. Pin 3 = 3.3 v
+    [3]. Pin 4 = GND
+    [4]. Pin 6 = SCL
+ [3]. Using the pinout of the Arduino Nano ESP32 [here] (https://docs.arduino.cc/hardware/nano-esp32) there is no explicit pins labeled for i2c SDA & SCl pins.  However, the [datasheet] (https://docs.arduino.cc/resources/datasheets/ABX00083-datasheet.pdf) says they can be found as follows:
+    [1]. SDA = A4
+    [2]. SCL = A5
  
  This is all the wiring required to get the project running!
 
