@@ -1,27 +1,61 @@
+/*
+  This program broadcasts the Nunchuk data so it can be used as a simple BLE controller.
+
+  Board: Arduino Nano ESP32
+
+  You can use a generic BLE central app, like LightBlue (iOS and Android) or
+  nRF Connect (Android), to interact with the services and characteristics
+  created in this sketch.
+
+  Author: Austin
+  https://github.com/gregoryPowell/BLE-Nunchuk
+*/
+
 #include <ArduinoBLE.h>
 #include <Wire.h>
 #include "Nunchuk.h"
 
-// NOTE: I am just learning how BLE works and am unsure if I am properly using the UUID system for my Services and Characteristics
+/* Manufacturing Data */
+#define MANUFACTURER_NAME_STRING "Arduino"
+#define MODEL_NUMBER_STRING "0001"
+#define SERIAL_NUMBER_STRING "0001"
+#define HARDWARE_REV_STRING "0.01"
+#define SOFTWARE_REV_STRING "0.01"
 
-// UUID generated here: https://www.uuidgenerator.net/
-BLEService NunchukService("e4257d92-0c9f-4fbc-bcf2-a8361bffcfb3");
+/* Generated UUIDs */
+#define NUNCHUCK_SERVICE_UUID "e4257d92-0c9f-4fbc-bcf2-a8361bffcfb3"
+#define Z_BUTTON_UUID "9ea41596-18ec-45a9-a194-49597368e655"
+#define C_BUTTON_UUID "9ea41596-18ed-45a9-a194-49597368e655"
+#define JOYSTICK_X_UUID "9ea41596-18ee-45a9-a194-49597368e655"
+#define JOYSTICK_Y_UUID "9ea41596-18ef-45a9-a194-49597368e655"
+#define ACC_X_UUID "9ea41596-18f0-45a9-a194-49597368e655"
+#define ACC_Y_UUID "9ea41596-18f1-45a9-a194-49597368e655"
+#define ACC_Z_UUID "9ea41596-18f2-45a9-a194-49597368e655"
+#define PITCH_UUID "9ea41596-18f3-45a9-a194-49597368e655"
+#define ROLL_UUID "9ea41596-18f4-45a9-a194-49597368e655"
 
-// UUID for push button = 0x04CC
-BLEByteCharacteristic ButtonZ("04CC", BLENotify);  // Z button
-BLEByteCharacteristic ButtonC("04CC", BLENotify);  // C button
-// UUID for joystick = 0x03C3
-BLEShortCharacteristic JoystickX("03C3", BLENotify);
-BLEShortCharacteristic JoystickY("03C3", BLENotify);
+/* Services */
+BLEService DIS("180A");                            // Device Information Service
+BLEService NunchukService(NUNCHUCK_SERVICE_UUID);  //generated Nunchuk primary service
 
-// UUID for acceleration = 0x2713
-BLEShortCharacteristic AccX("2713", BLENotify);
-BLEShortCharacteristic AccY("2713", BLENotify);
-BLEShortCharacteristic AccZ("2713", BLENotify);
+/* Characterisitics */
+// Device Information to be added to DIS per Spec.
+BLEStringCharacteristic ManufacturerNameString("2A29", BLERead, sizeof(MANUFACTURER_NAME_STRING));
+BLEStringCharacteristic ModelNumberString("2A24", BLERead, sizeof(MODEL_NUMBER_STRING));
+BLEStringCharacteristic SerialNumberString("2A25", BLERead, sizeof(SERIAL_NUMBER_STRING));
+BLEStringCharacteristic HardwareRevisionString("2A27", BLERead, sizeof(HARDWARE_REV_STRING));
+BLEStringCharacteristic SoftwareRevisionString("2A28", BLERead, sizeof(SOFTWARE_REV_STRING));
 
-// UUID for plane angle (degree) = 0x2763
-BLEFloatCharacteristic Pitch("2763", BLENotify);
-BLEFloatCharacteristic Roll("2763", BLENotify);
+// Nunchuk Charactersitics
+BLEByteCharacteristic ButtonZ(Z_BUTTON_UUID, BLERead | BLENotify);       // Z button (uint8_t)
+BLEByteCharacteristic ButtonC(C_BUTTON_UUID, BLERead | BLENotify);       // C button (uint8_t)
+BLEShortCharacteristic JoystickX(JOYSTICK_X_UUID, BLERead | BLENotify);  // Joystick X (uint16_t)
+BLEShortCharacteristic JoystickY(JOYSTICK_Y_UUID, BLERead | BLENotify);  // Joystick Y (uint16_t)
+BLEShortCharacteristic AccX(ACC_X_UUID, BLERead | BLENotify);            // Acceleration X (uint16_t)
+BLEShortCharacteristic AccY(ACC_Y_UUID, BLERead | BLENotify);            // Acceleration Y (uint16_t)
+BLEShortCharacteristic AccZ(ACC_Z_UUID, BLERead | BLENotify);            // Acceleration Z (uint16_t)
+BLEFloatCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);           // Pitch (float)
+BLEFloatCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);             // Roll (float)
 
 void setup() {
   Serial.begin(9600);
@@ -34,11 +68,14 @@ void setup() {
     while (1)
       ;
   }
+  // add the characterisitics to the DIS service
+  DIS.addCharacteristic(ManufacturerNameString);
+  DIS.addCharacteristic(ModelNumberString);
+  DIS.addCharacteristic(SerialNumberString);
+  DIS.addCharacteristic(HardwareRevisionString);
+  DIS.addCharacteristic(SoftwareRevisionString);
 
-  BLE.setLocalName("Nunchuk");               // set the local name peripheral advertises
-  BLE.setAdvertisedService(NunchukService);  // set the UUID for the peripheral advertises
-
-  // add the characteristics to the service
+  // add the characteristics to the Nunchuk service
   NunchukService.addCharacteristic(ButtonZ);
   NunchukService.addCharacteristic(ButtonC);
   NunchukService.addCharacteristic(JoystickX);
@@ -49,6 +86,16 @@ void setup() {
   NunchukService.addCharacteristic(Pitch);
   NunchukService.addCharacteristic(Roll);
 
+  // write device information
+  ManufacturerNameString.writeValue(MANUFACTURER_NAME_STRING);
+  ModelNumberString.writeValue(MODEL_NUMBER_STRING);
+  SerialNumberString.writeValue(SERIAL_NUMBER_STRING);
+  HardwareRevisionString.writeValue(HARDWARE_REV_STRING);
+  SoftwareRevisionString.writeValue(SOFTWARE_REV_STRING);
+
+  BLE.setDeviceName("Nunchuk");    // set the device name
+  BLE.setLocalName("Nunchuk");     // set the local name peripheral advertises
+  BLE.setAdvertisedService(DIS);   // set the UUID for the peripheral advertises
   BLE.addService(NunchukService);  //Add Service
 
   BLE.advertise();
