@@ -54,8 +54,8 @@ BLEShortCharacteristic JoystickY(JOYSTICK_Y_UUID, BLERead | BLENotify);  // Joys
 BLEShortCharacteristic AccX(ACC_X_UUID, BLERead | BLENotify);            // Acceleration X (uint16_t)
 BLEShortCharacteristic AccY(ACC_Y_UUID, BLERead | BLENotify);            // Acceleration Y (uint16_t)
 BLEShortCharacteristic AccZ(ACC_Z_UUID, BLERead | BLENotify);            // Acceleration Z (uint16_t)
-BLEFloatCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);           // Pitch (float)
-BLEFloatCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);             // Roll (float)
+BLEIntCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);             // Pitch (float)
+BLEIntCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);               // Roll (float)
 
 void setup() {
   Serial.begin(9600);
@@ -134,11 +134,16 @@ void loop() {
         if (nunchuk_accelZ() != AccZ.value()) {
           AccZ.writeValue(nunchuk_accelZ());
         }
-        if (nunchuk_pitch() != Pitch.value()) {
-          Pitch.writeValue(nunchuk_pitch());
+
+        int pitch_deg = (int)((nunchuk_pitch() * 180) / PI);
+        int roll_deg = (int)((nunchuk_pitch() * 180) / PI);
+
+        if (pitch_deg != Pitch.value()) {
+          Pitch.writeValue(pitch_deg);
+
         }
-        if (nunchuk_roll() != Roll.value()) {
-          Roll.writeValue(nunchuk_roll());
+        if (roll_deg != Roll.value()) {
+          Roll.writeValue(roll_deg);
         }
       }
     }

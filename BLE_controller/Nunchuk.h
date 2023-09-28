@@ -12,12 +12,12 @@
 #include <Wire.h>
 
 // Calibration accelerometer values, depends on your Nunchuk
-#define NUNCHUK_ACCEL_X_ZERO 512
-#define NUNCHUK_ACCEL_Y_ZERO 512
-#define NUNCHUK_ACCEL_Z_ZERO 512
+#define NUNCHUK_ACCEL_X_ZERO 0 //512
+#define NUNCHUK_ACCEL_Y_ZERO 0 //512
+#define NUNCHUK_ACCEL_Z_ZERO 0 //512
 
 // Calibration joystick values
-#define NUNCHUK_JOYSTICK_X_ZERO 127
+#define NUNCHUK_JOYSTICK_X_ZERO 128
 #define NUNCHUK_JOYSTICK_Y_ZERO 128
 
 // Whether to disable encryption. Enabling encryption means that every packet must be decrypted, which wastes cpu cycles. Cheap Nunchuk clones have problems with the encrypted init sequence, so be sure you know what you're doing
