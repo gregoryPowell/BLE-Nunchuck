@@ -55,11 +55,11 @@ BLEByteCharacteristic ButtonZ(Z_BUTTON_UUID, BLERead | BLENotify);       // Z bu
 BLEByteCharacteristic ButtonC(C_BUTTON_UUID, BLERead | BLENotify);       // C button (uint8_t)
 BLEByteCharacteristic JoystickX(JOYSTICK_X_UUID, BLERead | BLENotify);  // Joystick X (uint16_t)
 BLEByteCharacteristic JoystickY(JOYSTICK_Y_UUID, BLERead | BLENotify);  // Joystick Y (uint16_t)
-BLEShortCharacteristic AccX(ACC_X_UUID, BLERead | BLENotify);            // Acceleration X (uint16_t)
-BLEShortCharacteristic AccY(ACC_Y_UUID, BLERead | BLENotify);            // Acceleration Y (uint16_t)
-BLEShortCharacteristic AccZ(ACC_Z_UUID, BLERead | BLENotify);            // Acceleration Z (uint16_t)
-BLEShortCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);             // Pitch (float)
-BLEShortCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);               // Roll (float)
+BLEByteCharacteristic AccX(ACC_X_UUID, BLERead | BLENotify);            // Acceleration X (uint16_t)
+BLEByteCharacteristic AccY(ACC_Y_UUID, BLERead | BLENotify);            // Acceleration Y (uint16_t)
+BLEByteCharacteristic AccZ(ACC_Z_UUID, BLERead | BLENotify);            // Acceleration Z (uint16_t)
+BLEByteCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);             // Pitch (float)
+BLEByteCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);               // Roll (float)
 
 // Initalize nunchuk object
 Accessory nunchuk;
