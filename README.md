@@ -65,6 +65,8 @@ Inside the Nunchuk service are the following relevant characteristics which have
 
  ## License
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
  ## Refrences
 1. [Wii Brew](https://wiibrew.org/wiki/Wiimote/Extension_Controllers/Nunchuck)
 1. [Using a Wii Nunchuk with Arduino](https://www.xarg.org/2016/12/using-a-wii-nunchuk-with-arduino/)
