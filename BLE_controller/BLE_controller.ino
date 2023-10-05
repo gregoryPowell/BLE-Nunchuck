@@ -7,13 +7,17 @@
   nRF Connect (Android), to interact with the services and characteristics
   created in this sketch.
 
+  Required Extensions:
+  - ArduinoBLE (by Arduino)
+  - WiiChuck (by Kevin Harrington) <-- Note documentation for values if off by 1
+
   Author: Austin
   https://github.com/gregoryPowell/BLE-Nunchuk
 */
 
 #include <ArduinoBLE.h>
 #include <Wire.h>
-#include "Nunchuk.h"
+#include <WiiChuck.h>
 
 /* Manufacturing Data */
 #define MANUFACTURER_NAME_STRING "Arduino"
@@ -49,19 +53,26 @@ BLEStringCharacteristic SoftwareRevisionString("2A28", BLERead, sizeof(SOFTWARE_
 // Nunchuk Charactersitics
 BLEByteCharacteristic ButtonZ(Z_BUTTON_UUID, BLERead | BLENotify);       // Z button (uint8_t)
 BLEByteCharacteristic ButtonC(C_BUTTON_UUID, BLERead | BLENotify);       // C button (uint8_t)
-BLEShortCharacteristic JoystickX(JOYSTICK_X_UUID, BLERead | BLENotify);  // Joystick X (uint16_t)
-BLEShortCharacteristic JoystickY(JOYSTICK_Y_UUID, BLERead | BLENotify);  // Joystick Y (uint16_t)
+BLEByteCharacteristic JoystickX(JOYSTICK_X_UUID, BLERead | BLENotify);  // Joystick X (uint16_t)
+BLEByteCharacteristic JoystickY(JOYSTICK_Y_UUID, BLERead | BLENotify);  // Joystick Y (uint16_t)
 BLEShortCharacteristic AccX(ACC_X_UUID, BLERead | BLENotify);            // Acceleration X (uint16_t)
 BLEShortCharacteristic AccY(ACC_Y_UUID, BLERead | BLENotify);            // Acceleration Y (uint16_t)
 BLEShortCharacteristic AccZ(ACC_Z_UUID, BLERead | BLENotify);            // Acceleration Z (uint16_t)
-BLEIntCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);             // Pitch (float)
-BLEIntCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);               // Roll (float)
+BLEShortCharacteristic Pitch(PITCH_UUID, BLERead | BLENotify);             // Pitch (float)
+BLEShortCharacteristic Roll(ROLL_UUID, BLERead | BLENotify);               // Roll (float)
+
+// Initalize nunchuk object
+Accessory nunchuk;
 
 void setup() {
   Serial.begin(9600);
   Wire.begin();
   Wire.setClock(400000);
-  nunchuk_init();
+  nunchuk.begin();  // Intialize controller
+
+  if (nunchuk.type == Unknown) {
+    nunchuk.type == NUNCHUCK;
+  }
 
   if (!BLE.begin()) {
     Serial.println("starting Bluetooth® Low Energy module failed!");
@@ -112,38 +123,33 @@ void loop() {
 
     // Loop until disconnected
     while (central.connected()) {
-      if (nunchuk_read()) {
-        if (nunchuk_buttonZ() != ButtonZ.value()) {
-          ButtonZ.writeValue(nunchuk_buttonZ());
+      if (nunchuk.readData()) { // Read Inputs and update maps
+        if (nunchuk.values[10] != ButtonZ.value()) {
+          ButtonZ.writeValue(nunchuk.values[10]);
         }
-        if (nunchuk_buttonC() != ButtonC.value()) {
-          ButtonC.writeValue(nunchuk_buttonC());
+        if (nunchuk.values[11] != ButtonC.value()) {
+          ButtonC.writeValue(nunchuk.values[11]);
         }
-        if (nunchuk_joystickX() != JoystickX.value()) {
-          JoystickX.writeValue(nunchuk_joystickX());
+        if (nunchuk.values[0] != JoystickX.value()) {
+          JoystickX.writeValue(nunchuk.values[0]);
         }
-        if (nunchuk_joystickY() != JoystickY.value()) {
-          JoystickY.writeValue(nunchuk_joystickY());
+        if (nunchuk.values[1] != JoystickY.value()) {
+          JoystickY.writeValue(nunchuk.values[1]);
         }
-        if (nunchuk_accelX() != AccX.value()) {
-          AccX.writeValue(nunchuk_accelX());
+        if (nunchuk.values[4] != AccX.value()) {
+          AccX.writeValue(nunchuk.values[4]);
         }
-        if (nunchuk_accelY() != AccY.value()) {
-          AccY.writeValue(nunchuk_accelY());
+        if (nunchuk.values[5] != AccY.value()) {
+          AccY.writeValue(nunchuk.values[5]);
         }
-        if (nunchuk_accelZ() != AccZ.value()) {
-          AccZ.writeValue(nunchuk_accelZ());
+        if (nunchuk.values[6] != AccZ.value()) {
+          AccZ.writeValue(nunchuk.values[6]);
         }
-
-        int pitch_deg = (int)((nunchuk_pitch() * 180) / PI);
-        int roll_deg = (int)((nunchuk_pitch() * 180) / PI);
-
-        if (pitch_deg != Pitch.value()) {
-          Pitch.writeValue(pitch_deg);
-
+        if (nunchuk.values[3] != Pitch.value()) {
+          Pitch.writeValue(nunchuk.values[3]);
         }
-        if (roll_deg != Roll.value()) {
-          Roll.writeValue(roll_deg);
+        if (nunchuk.values[2] != Roll.value()) {
+          Roll.writeValue(nunchuk.values[2]);
         }
       }
     }
